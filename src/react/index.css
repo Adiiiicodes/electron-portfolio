@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #3b82f6;    /* Royal Blue */
+  --secondary: #111827;  /* Almost Black */
+  --accent: #10b981;     /* Emerald */
+  --background: #1e293b; /* Dark Slate */
+  --foreground: #f1f5f9; /* Slate Gray 100 */
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: normal;
+  scroll-behavior: smooth;
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-300;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium hover:bg-primary hover:text-white transition-all duration-300;
+  }
+}
+
+
+/* Add to index.css for Parallax Background */
+.parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.parallax-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  filter: blur(30px);
+}
+
+.parallax-circle-1 {
+  top: 10%;
+  left: 10%;
+  width: 300px;
+  height: 300px;
+  background: var(--primary);
+}
+
+.parallax-circle-2 {
+  top: 50%;
+  right: 5%;
+  width: 400px;
+  height: 400px;
+  background: var(--accent);
+}
+
+.parallax-circle-3 {
+  bottom: 10%;
+  left: 20%;
+  width: 250px;
+  height: 250px;
+  background: linear-gradient(45deg, var(--primary), var(--accent));
+}
+
+/* Bento grid layout for projects */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.75rem;
+}
+
+/* Card sizes with improved spacing */
+.small-card {
+  grid-column: span 4;
+  min-height: 240px;
+}
+
+.medium-card {
+  grid-column: span 6;
+  min-height: 280px;
+}
+
+.large-card {
+  grid-column: span 8;
+  grid-row: span 2;
+  min-height: 300px;
+}
+
+/* Project card styles */
+.project-card {
+  position: relative;
+  background: var(--card-bg, rgba(30, 41, 59, 0.5));
+  border-radius: 1.25rem;
+  border: 1px solid var(--border, rgba(59, 130, 246, 0.2));
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: var(--card-shadow, 0 10px 30px -15px rgba(2, 12, 27, 0.7));
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.project-card.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card content styling */
+.project-info {
+  padding: 1.75rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.project-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--foreground);
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.project-description {
+  font-size: 0.95rem;
+  color: var(--muted, #94a3b8);
+  margin-bottom: 1.75rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.technology-tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+/* GitHub link */
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted, #94a3b8);
+  font-size: 1.25rem;
+  padding: 0.65rem;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .small-card {
+    grid-column: span 6;
+  }
+  
+  .medium-card {
+    grid-column: span 6;
+  }
+  
+  .large-card {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .small-card,
+  .medium-card,
+  .large-card {
+    grid-column: span 1;
+  }
+}
