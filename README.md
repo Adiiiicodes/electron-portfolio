@@ -1,6 +1,6 @@
 # 🚀 My First Electron.js Project — Learning Playground
 
-> NOTE: This is my first Electron.js project — built purely for learning and out of a post-exam boredom curiosity. It's not intended for contributions; it's a fun exploration of how web skills can build desktop apps. 🧠✨
+> NOTE: This is my first Electron.js project — built purely for learning and out of a ensem-exam boredom curiosity. It's not intended for contributions; it's a fun exploration of how web skills can build desktop apps. 🧠✨
 
 ---
 
