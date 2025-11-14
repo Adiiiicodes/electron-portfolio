@@ -2,19 +2,30 @@
   "name": "electron-portfolio",
   "version": "1.0.0",
   "description": "Desktop Portfolio Application",
+  "author": "Aditya Nalawade <nalawadeaditya@gmail.com>",
   "main": "src/index.js",
   "scripts": {
-  "start": "./node_modules/.bin/electron . --no-sandbox",
-  "dev": "webpack --watch & ./node_modules/.bin/electron . --no-sandbox",
-  "build": "webpack && electron-builder",
-  "build:webpack": "webpack"
-},
+    "start": "./node_modules/.bin/electron . --no-sandbox",
+    "dev": "webpack --watch & ./node_modules/.bin/electron . --no-sandbox",
+    "build": "webpack && electron-builder",
+    "build:webpack": "webpack"
+  },
   "build": {
     "appId": "com.yourname.portfolio",
     "productName": "Portfolio",
     "directories": {
       "output": "dist"
     },
+    "files": [
+      "src/build/**/*",
+      "src/index.js",
+      "src/preload.js",
+      "package.json"
+    ],
+    "win": {
+    "icon": "assets/icon.ico",
+    "target": ["nsis"]
+  },
     "linux": {
       "target": [
         "AppImage",
@@ -36,6 +47,7 @@
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "electron": "^39.1.2",
+    "electron-builder": "^26.0.12",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.4",
     "postcss": "^8.5.6",

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowDown } from "react-icons/fa";
+import pic1 from "../../assets/PIC1.jpg";
+import pic2 from "../../assets/PIC2.png";
+import pic3 from "../../assets/PIC3.png";
+import pic4 from "../../assets/PIC4.png";
 
 const Hero = () => {
   // Images must be imported or accessed via electron's file system
   // For now we'll assume they're in a public directory accessible by relative path
-  const images = [
-    "./assets/PIC1.jpg",
-    "./assets/PIC2.png",
-    "./assets/PIC3.png",
-    "./assets/PIC4.png",
-  ];
+  const images = [ pic1, pic2, pic3, pic4  ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
