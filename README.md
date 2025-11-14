@@ -230,3 +230,133 @@ Thanks for checking this out — building a desktop app with web skills is surpr
 Happy hacking! ⚡️
 
 — Built for learning & curiosity
+
+---
+
+## Packaging — exact commands for Ubuntu and Windows (what changed & how to build)
+
+I made a couple small changes to the repo to make packaging smoother:
+
+- Added an `author` field to `package.json` (electron-builder requires maintainer info for `.deb`). Please replace the placeholder email with your real email.
+- Added a `files` array to the `build` block in `package.json` so `src/build` (webpack output) and main/preload files are explicitly included in the packaged app.
+
+Below are the step-by-step commands you can run from the project root to produce Linux (AppImage + .deb) and Windows installers. I also include code-signing options for Windows installers.
+
+Important: run these from the project root.
+
+Packaging prerequisites (one time):
+
+```bash
+# Install electron-builder locally (dev dependency)
+npm install --save-dev electron-builder
+
+# Optional helpers for building .deb on Ubuntu
+sudo apt update
+sudo apt install -y fakeroot dpkg-dev
+```
+
+Build + package for Ubuntu (AppImage + .deb)
+
+1) Build the renderer (webpack):
+
+```bash
+npm run build:webpack
+```
+
+2) Package the app (electron-builder):
+
+```bash
+# Option A: use your package.json `build` script (runs webpack && electron-builder)
+npm run build
+
+# Option B: run electron-builder directly (if you already ran webpack)
+npx electron-builder --linux deb --linux AppImage --x64
+```
+
+3) Test the artifacts (in `dist/` by default):
+
+```bash
+ls -la dist
+chmod +x dist/*.AppImage
+./dist/*.AppImage
+
+# Install the .deb
+sudo dpkg -i dist/*.deb
+sudo apt-get install -f  # fix dependencies if needed
+```
+
+Notes for Linux packaging
+
+- Make sure `src/build` contains `index.html`, `bundle.js` and `assets/` (webpack emits these when you run `npm run build:webpack`).
+- If assets are missing at runtime, either import images in your components (recommended) or use CopyWebpackPlugin to copy `src/assets` into `src/build/assets`.
+- If you see warnings about icon or category, add `linux.icon` (path to .png/.ico) and `linux.category` in `package.json` build config.
+
+Build + package for Windows (recommended: run on Windows or use CI)
+
+Best practice: build on a Windows machine or via CI (GitHub Actions) running on `windows-latest`.
+
+1) Add a Windows icon and update `package.json` build block. Example snippet:
+
+```json
+"win": {
+  "icon": "assets/icon.ico",
+  "target": ["nsis"]
+}
+```
+
+2) Build on Windows (PowerShell):
+
+```powershell
+npm install
+npm run build:webpack
+npx electron-builder --win nsis --x64
+```
+
+Windows signing (production-ready installers)
+
+Option A — Let electron-builder sign during build (recommended):
+
+- Set these environment variables before running electron-builder:
+  - `CSC_LINK` — path or URL to your `.p12`/`.pfx` certificate
+  - `CSC_KEY_PASSWORD` — the password for the certificate
+
+Example (PowerShell):
+
+```powershell
+$env:CSC_LINK = "C:\path\to\certificate.pfx"
+$env:CSC_KEY_PASSWORD = "pfxPassword"
+npx electron-builder --win nsis --x64
+```
+
+Option B — Sign manually after build with SignTool (Windows SDK):
+
+```powershell
+# sign the installer produced by electron-builder
+signtool sign /f "C:\path\to\certificate.pfx" /p "pfxPassword" /tr http://timestamp.digicert.com /td sha256 /fd sha256 "dist\YourInstaller.exe"
+```
+
+Notes on signing
+
+- Use a trusted code-signing certificate (PFX) from a CA. For wide distribution, EV (Extended Validation) certs reduce SmartScreen prompts.
+- electron-builder can automatically sign if `CSC_LINK` / `CSC_KEY_PASSWORD` are set. In CI, store these as secrets.
+- Cross-signing from Linux is possible (osslsigncode / Wine) but fragile — prefer Windows or CI.
+
+CI recommendation (GitHub Actions)
+
+Use a Windows runner to build and sign. Example outline:
+
+1. Add a GitHub Actions workflow that runs on `windows-latest`.
+2. Use repository secrets for `CSC_LINK` and `CSC_KEY_PASSWORD` (or upload PFX as a secure artifact).
+3. Run `npm ci`, `npm run build:webpack`, then `npx electron-builder --win nsis --x64`.
+
+If you want, I can add a GitHub Actions workflow file and a `win` block to `package.json`, and I can create a short helper to convert a PNG to `.ico` (or show commands to do that locally).
+
+---
+
+If you'd like, I can next:
+
+- replace the placeholder email in `package.json` with the one you provide,
+- add `win` metadata (icon + NSIS settings) to `package.json`,
+- create a simple GitHub Actions workflow to build Windows installers automatically.
+
+Tell me which of the above you'd like me to commit next and I'll apply the change.
